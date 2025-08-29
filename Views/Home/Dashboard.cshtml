@@ -1,0 +1,83 @@
+<h2>Welcome, @ViewBag.User</h2>
+
+@if (ViewBag.UserType == "admin")
+{
+    <div class="alert alert-success">
+        <h4>You are an Admin</h4>
+        <p>You have full system access including user management and security monitoring.</p>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">User Management</h5>
+                    <p class="card-text">Create and manage user accounts</p>
+                    <a href="@Url.Action("Dashboard", "Admin")" class="btn btn-primary">Manage Users</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">SIEM Dashboard</h5>
+                    <p class="card-text">Monitor security events and alerts</p>
+                    <a href="@Url.Action("SIEM", "Admin")" class="btn btn-info">View SIEM</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Change Password</h5>
+                    <p class="card-text">Update your account password</p>
+                    <a href="@Url.Action("ChangePassword", "Home")" class="btn btn-secondary">Change Password</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (ViewBag.UserType == "user")
+{
+    <div class="alert alert-info">
+        <h4>You are a User</h4>
+        <p>You have standard access and can manage your account settings.</p>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Account Settings</h5>
+                    <p class="card-text">Update your password and account information</p>
+                    <a href="@Url.Action("ChangePassword", "Home")" class="btn btn-primary">Change Password</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (ViewBag.UserType == "guest")
+{
+    <div class="alert alert-warning">
+        <h4>You are a Guest</h4>
+        <p>You have read-only access. Contact an administrator for any changes.</p>
+    </div>
+    
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Guest Access</h5>
+            <p class="card-text">Your account has limited permissions. You cannot modify any settings or data.</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <h4>Unknown Role</h4>
+        <p>Please contact an administrator to assign you proper permissions.</p>
+    </div>
+}
+
+<div class="mt-4">
+    <a href="@Url.Action("Logout", "Auth")" class="btn btn-outline-danger">Logout</a>
+</div>

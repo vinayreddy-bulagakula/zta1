@@ -1,0 +1,24 @@
+@model ZTAWebApp.Models.LoginView
+
+<form asp-action="Login" asp-controller="Auth" method="post">
+    <div class="form-group">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="OTP"></label>
+        <input asp-for="OTP" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+
+    <div class="text-danger">
+        @Html.ValidationSummary()
+    </div>
+</form>

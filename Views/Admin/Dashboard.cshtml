@@ -1,0 +1,77 @@
+@model List<ZTAWebApp.Models.User>
+
+<h2>Admin Dashboard</h2>
+<div class="row">
+    <div class="col-md-6">
+        <h3>User Management</h3>
+        <a href="@Url.Action("CreateUser")" class="btn btn-primary mb-3">Create New User</a>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var user in Model)
+                {
+                    <tr>
+                        <td>@user.Username</td>
+                        <td>@user.Email</td>
+                        <td>
+                            <span class="badge badge-success">Active</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" onclick="toggleUser(@user.UserId, false)">Deactivate</button>
+                            <button class="btn btn-sm btn-info" onclick="resetMFA(@user.UserId)">Reset MFA</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <h3>Quick Actions</h3>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Security Monitoring</h5>
+                <p class="card-text">View security events and system logs</p>
+                <a href="@Url.Action("SIEM")" class="btn btn-info">View SIEM Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleUser(userId, activate) {
+    $.ajax({
+        url: '@Url.Action("ToggleUserStatus")',
+        method: 'POST',
+        data: { userId: userId, activate: activate },
+        success: function(result) {
+            if(result.success) {
+                location.reload();
+            } else {
+                alert('Error: ' + result.message);
+            }
+        }
+    });
+}
+
+function resetMFA(userId) {
+    $.ajax({
+        url: '@Url.Action("ResetMFA")',
+        method: 'POST',
+        data: { userId: userId },
+        success: function(result) {
+            if(result.success) {
+                alert('MFA reset successfully');
+            } else {
+                alert('Error: ' + result.message);
+            }
+        }
+    });
+}
+</script>

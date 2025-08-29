@@ -1,0 +1,97 @@
+@model List<ZTAWebApp.Models.SecurityEvent>
+
+<h2>SIEM Dashboard - Security Events</h2>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <div class="alert alert-info">
+            <strong>Security Information and Event Management (SIEM)</strong><br>
+            Real-time monitoring of security events, failed login attempts, and malicious activities.
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5>Normal Events</h5>
+                <h3>@Model.Count(e => e.Severity == "NORMAL")</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h5>Malicious Events</h5>
+                <h3>@Model.Count(e => e.Severity == "MALICIOUS")</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5>Failed Logins</h5>
+                <h3>@Model.Count(e => e.EventType.Contains("FAILED"))</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5>Total Events</h5>
+                <h3>@Model.Count</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Event Type</th>
+                <th>Severity</th>
+                <th>Description</th>
+                <th>Source IP</th>
+                <th>User</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var evt in Model.OrderByDescending(e => e.Timestamp))
+            {
+                <tr class="@(evt.Severity == "MALICIOUS" ? "table-danger" : (evt.Severity == "NORMAL" ? "table-success" : ""))">
+                    <td>@evt.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>
+                        <span class="badge @(evt.EventType.Contains("FAILED") ? "badge-warning" : (evt.EventType.Contains("SUCCESS") ? "badge-success" : "badge-info"))">
+                            @evt.EventType
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge @(evt.Severity == "MALICIOUS" ? "badge-danger" : "badge-success")">
+                            @evt.Severity
+                        </span>
+                    </td>
+                    <td>@evt.Description</td>
+                    <td>@evt.SourceIp</td>
+                    <td>@evt.Username</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <p>No security events recorded yet.</p>
+    </div>
+}
+
+<script>
+// Auto-refresh every 30 seconds
+setInterval(function() {
+    location.reload();
+}, 30000);
+</script>

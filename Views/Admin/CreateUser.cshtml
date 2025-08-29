@@ -1,0 +1,90 @@
+@model ZTAWebApp.Models.CreateUserViewModel
+
+<h2>Create New User</h2>
+
+@if (ViewBag.Success == true)
+{
+    <div class="alert alert-success">
+        <h4>User Created Successfully!</h4>
+        <p>QR Code for MFA setup:</p>
+@if (!string.IsNullOrEmpty(ViewBag.QRBase64))
+{
+    <img src="@ViewBag.QRBase64" alt="MFA QR Code" class="img-fluid" style="max-width: 200px;" />
+    <p><small>Scan this QR code in Google Authenticator to complete MFA setup.</small></p>
+}
+else if (!string.IsNullOrEmpty(ViewBag.QRCodePath))
+{
+    <!-- Fallback to file-based QR (for demo users) -->
+    <img src="~/images/@ViewBag.QRCodePath" alt="MFA QR Code" class="img-fluid" style="max-width: 200px;" />
+    <p><small>Save this QR code and provide it to the user for MFA setup.</small></p>
+}
+
+else if (!string.IsNullOrEmpty(ViewBag.QRCodePath))
+{
+    <img src="~/images/@ViewBag.QRCodePath" alt="MFA QR Code" class="img-fluid" style="max-width: 200px;" />
+    <p><small>Save this QR code and provide it to the user for MFA setup.</small></p>
+}
+
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.Error))
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+
+<form asp-action="CreateUser" method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Username"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+                <small class="form-text text-muted">Minimum 6 characters, letters and numbers only</small>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" type="email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Role"></label>
+                <select asp-for="Role" class="form-control">
+                    <option value="">Select Role</option>
+                    @foreach (var role in ViewBag.Roles)
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </select>
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create User</button>
+            <a href="@Url.Action("Dashboard")" class="btn btn-secondary">Cancel</a>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Role Permissions</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li><strong>Admin:</strong> Can create users, manage system, view SIEM</li>
+                        <li><strong>User:</strong> Can change their own password</li>
+                        <li><strong>Guest:</strong> Read-only access, cannot change password</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
